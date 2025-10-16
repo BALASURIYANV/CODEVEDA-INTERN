@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L2_TASK2</title>
+</head>
+<body>
+    <div class="class1">
+        <h1>TASK HANDLER</h1>
+        <h3>Save your tasks here</h3>
+
+        <input id="task" placeholder="Enter your task">
+        <br>
+        <br>
+        <button id="add" onclick="addTask()">Add Task</button>
+
+        <ul id="taskList"></ul>
+    </div>
+
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: linear-gradient(135deg, #6bdd93, #027b39);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .class1 {
+            background: white;
+            width: 450px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 2px 4px 10px rgb(0, 0, 0);
+            text-align: center;
+        }
+
+        h1 {
+            color: #010101;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #66a6ff;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #55f277;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        li {
+            background: #f2f2f2;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li.done {
+            text-decoration: line-through;
+            background-color: #d4edda;
+            color: #000000;
+        }
+
+        .deleteBtn {
+            background-color: #d33939;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .deleteBtn:hover {
+            background-color: #ab0404;
+        }
+    </style>
+
+    <script>
+        var tasks = [];
+
+        window.onload = function() {
+            if (localStorage.getItem("tasks")) {
+                tasks = localStorage.getItem("tasks").split(",");
+                for (var i = 0; i < tasks.length; i++) {
+                    if (tasks[i].trim() !== "") {
+                        displayTask(tasks[i]);
+                    }
+                }
+            }
+        }
+        function addTask() {
+            var input = document.getElementById("task");
+            var taskText = input.value.trim();
+
+            if (taskText === "") {
+                alert("Please enter a vaild task!");
+                return;
+            }
+
+            tasks.push(taskText);
+            localStorage.setItem("tasks", tasks.join(","));
+            displayTask(taskText);
+            input.value = "";
+        }
+
+        function displayTask(taskText) {
+            var ul = document.getElementById("taskList");
+            var li = document.createElement("li");
+
+            var span = document.createElement("span");
+            span.textContent = taskText;
+            span.onclick = function() {
+                li.classList.toggle("done");
+            }
+
+            
+            var del = document.createElement("button");
+            del.textContent = "Delete X";
+            del.className = "deleteBtn";
+            del.onclick = function() {
+                ul.removeChild(li);
+                removeFromStorage(taskText);
+            }
+
+            li.appendChild(span);
+            li.appendChild(del);
+            ul.appendChild(li);
+        }
+
+       
+        function removeFromStorage(taskText) {
+            var index = tasks.indexOf(taskText);
+            if (index > -1) {
+                tasks.splice(index, 1);
+                localStorage.setItem("tasks", tasks.join(","));
+            }
+        }
+    </script>
+</body>
+</html>
